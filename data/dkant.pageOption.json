@@ -1,0 +1,785 @@
+[{
+  "_id": {
+    "$oid": "618380b363bb5463fa6c611d"
+  },
+  "featureId": "F22000",
+  "option": {
+    "editAbleOption": {
+      "desc": "시설물 정보 관리 추가  수정  옵션",
+      "value": "editAble",
+      "list": [
+        {
+          "listValue": "readOnly",
+          "listDesc": "읽기 가능"
+        },
+        {
+          "listValue": "editAble",
+          "listDesc": "추가가, 수정 가능"
+        }
+      ]
+    },
+    "excelInputAbleOption": {
+      "desc": "시설물 정보 관리 엑셀 입력  옵션",
+      "value": "possible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "엑셀 입력 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "엑셀 입력 불가능"
+        }
+      ]
+    },
+    "excelOutputAbleOption": {
+      "desc": "시설물 정보 관리 엑셀 출력 옵션",
+      "value": "possible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "엑셀 출력 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "엑셀 출력 불가능"
+        }
+      ]
+    },
+    "allFcltAddressEditOption": {
+      "desc": "주소 일괄 갱신기능 사용 가능여부",
+      "value": "impossible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "사용 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "사용 불가능"
+        }
+      ]
+    },
+    "allFcltSiGuGunEditOption": {
+      "desc": "시구군 정보 갱신기능 사용 가능여부",
+      "value": "impossible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "사용 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "사용 불가능"
+        }
+      ]
+    },
+    "interlockAbleFlag": {
+      "desc": "시설물 연동 버튼 활성화 여부",
+      "value": "able",
+      "list": [
+        {
+          "listValue": "able",
+          "listDesc": "활성화"
+        },
+        {
+          "listValue": "disAble",
+          "listDesc": "비활성화"
+        }
+      ]
+    },
+    "filterDataOption": {
+      "desc": "시설물 속성 필터링 여부",
+      "value": "able",
+      "list": [
+        {
+          "listValue": "able",
+          "listDesc": "활성화"
+        },
+        {
+          "listValue": "disAble",
+          "listDesc": "비활성화"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "61887d3963bb5463fab96c10"
+  },
+  "featureId": "F11000",
+  "option": {
+    "excelInputAbleOption": {
+      "desc": "사용자 정보 관리 엑셀 입력 옵션",
+      "value": "possible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "엑셀 입력 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "엑셀 입력 불가능"
+        }
+      ]
+    },
+    "excelOutputAbleOption": {
+      "desc": "사용자 정보 관리 엑셀 출력 옵션",
+      "value": "possible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "엑셀 출력 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "엑셀 출력 불가능"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "618b6aacff39da1d41507393"
+  },
+  "featureId": "F23000",
+  "option": {
+    "editAbleOption": {
+      "desc": "시설물 유형 관리 추가 및 수정 옵션",
+      "value": "editAble",
+      "list": [
+        {
+          "listValue": "readOnly",
+          "listDesc": "읽기 가능"
+        },
+        {
+          "listValue": "editable",
+          "listDesc": "추가가, 수정 가능"
+        }
+      ]
+    },
+    "excelInputAbleOption": {
+      "desc": "시설물 유형 관리 엑셀 입력 옵션",
+      "value": "possible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "엑셀 입력 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "엑셀 입력 불가능"
+        }
+      ]
+    },
+    "excelOutputAbleOption": {
+      "desc": "시설물 유형 관리 엑셀 출력 옵션",
+      "value": "possible",
+      "list": [
+        {
+          "listValue": "possible",
+          "listDesc": "엑셀 출력 가능"
+        },
+        {
+          "listValue": "impossible",
+          "listDesc": "엑셀 출력 불가능"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "618b6d30ff39da1d41507847"
+  },
+  "featureId": "F21000",
+  "option": {
+    "editAbleOption": {
+      "desc": "GIS 시설물 관리 추가 및 수정 옵션",
+      "value": "editAble",
+      "list": [
+        {
+          "listValue": "readOnly",
+          "listDesc": "읽기 가능"
+        },
+        {
+          "listValue": "editable",
+          "listDesc": "추가, 수정 가능"
+        }
+      ]
+    },
+    "showTrafficOption": {
+      "desc": "GIS 교통정보 버튼 활성화 여부",
+      "value": "false",
+      "list": [
+        {
+          "listValue": "true",
+          "listDesc": "GIS 교통정보 버튼 활성화"
+        },
+        {
+          "listValue": "false",
+          "listDesc": "GIS 교통정보 버튼 비활성화"
+        }
+      ]
+    },
+    "distanceMeasurementOption": {
+      "desc": "GIS 거리측정 버튼 활성화 여부",
+      "value": "false",
+      "list": [
+        {
+          "listValue": "true",
+          "listDesc": "GIS 거리측정 버튼 활성화"
+        },
+        {
+          "listValue": "false",
+          "listDesc": "GIS 거리측정 버튼 비활성화"
+        }
+      ]
+    },
+    "filterDataOption": {
+      "desc": "시설물 속성 필터링 여부",
+      "value": "able",
+      "list": [
+        {
+          "listValue": "able",
+          "listDesc": "활성화"
+        },
+        {
+          "listValue": "disAble",
+          "listDesc": "비활성화"
+        }
+      ]
+    },
+    "facilityLabelDisplayMode": {
+      "desc": "지도 위 시설물의 라벨 표출여부 및 초기값 설정",
+      "value": "none",
+      "list": [
+        {
+          "listValue": "fcltName",
+          "listDesc": "시설물 전체명 초기값으로 표출"
+        },
+        {
+          "listValue": "processedFcltName",
+          "listDesc": "시설물 축약명 초기값으로 표출(축약으로 사용할 정규식은 “지도시설물명정규식” 참고)"
+        },
+        {
+          "listValue": "none",
+          "listDesc": "지도 위에 버튼 삭제"
+        }
+      ]
+    },
+    "facilityNameRegex": {
+      "desc": "지도 시설물 정규식",
+      "value": "",
+      "list": [
+        ""
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "61ef78afcd182304f945b243"
+  },
+  "featureId": "AF21000",
+  "option": {
+    "HaveObjectFromTo": {
+      "desc": "동선 추적에서 중간에 있는 사진 실행 시 이전의 사진으로부터 오는 이동 표시 표출 여부",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "on",
+          "listDesc": "이전 사진-현재 사진-다음 사진 모든 이동 표시 표출"
+        },
+        {
+          "listValue": "off",
+          "listDesc": "현재 사진-다음 사진으로만 이동 표시 표출"
+        }
+      ]
+    },
+    "CCTVUseAbleOption": {
+      "desc": "AI-Brain CCTV 옵션",
+      "value": "standard",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "CCTV기능 사용 불가능"
+        },
+        {
+          "listValue": "standard",
+          "listDesc": "CCTV 사용 가능"
+        }
+      ]
+    },
+    "FaceUseAbleOption": {
+      "desc": "AI-Brain 얼굴검색 옵션",
+      "value": "standard",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "얼굴검색기능 사용 불가능"
+        },
+        {
+          "listValue": "standard",
+          "listDesc": "얼굴검색기능 사용 가능"
+        }
+      ]
+    },
+    "showLinkTrackingOption": {
+      "desc": "AI-Brain 지도 노드링크 추적 기능 옵션",
+      "value": "disAble",
+      "list": [
+        {
+          "listValue": "disAble",
+          "listDesc": "노드링크 추적 사용 불가능"
+        },
+        {
+          "listValue": "use-off",
+          "listDesc": "노드링크 추적 사용가능(버튼 off에서 시작)"
+        },
+        {
+          "listValue": "use-on",
+          "listDesc": "노드링크 추적 사용가능(버튼 on에서 시작)"
+        }
+      ]
+    },
+    "resultColumnCountOption": {
+      "desc": "검색결과 한줄당 이미지 갯수 옵션",
+      "value": "5",
+      "list": [
+        {
+          "listValue": "2",
+          "listDesc": "2개씩 표출"
+        },
+        {
+          "listValue": "3",
+          "listDesc": "3개씩 표출"
+        },
+        {
+          "listValue": "4",
+          "listDesc": "4개씩 표출"
+        },
+        {
+          "listValue": "5",
+          "listDesc": "5개씩 표출"
+        }
+      ]
+    },
+    "miniMap": {
+      "desc": "미니맵 표출여부 옵션",
+      "value": "on",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "미니맵 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "미니맵 표출"
+        }
+      ]
+    },
+    "cameraTagList": {
+      "desc": "AI-Brain 카메라 선택 시 선택된 카메라를 태그로 보여주는 옵션",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "선택 카메라 태그 리스트 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "선택 카메라 태그 리스트 표출"
+        }
+      ]
+    },
+    "hiddenFace": {
+      "desc": "얼굴사진(detectType:2)의 경우 blur 처리되고 확인하려면 인증 필요한 옵션",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "얼굴 사진 제한 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "얼굴 사진 시 blur처리됨"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "62021ae0cd182304f9cffc5f"
+  },
+  "featureId": "F62000",
+  "option": {
+    "gisApiKeyOption": {
+      "desc": "플랫폼 환경설정 gis API key 유무 옵션",
+      "value": "false",
+      "list": [
+        {
+          "listValue": "true",
+          "listDesc": "gis API key 변경 가능"
+        },
+        {
+          "listValue": "false",
+          "listDesc": "gis API key 변경 불가능"
+        }
+      ]
+    },
+    "installPC64bitClientFileOption": {
+      "desc": "플랫폼 환경설정 PC 64bit 클라이언트 설치파일 등록 유무 옵션",
+      "value": "false",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "PC 64bit 클라이언트 설치파일 등록 가능"
+        },
+        {
+          "listValue": "false",
+          "listDesc": "PC 64bit 클라이언트 설치파일 등록 불가능"
+        }
+      ]
+    },
+    "installPC32bitClientFileOption": {
+      "desc": "플랫폼 환경설정 PC 32bit 클라이언트 설치파일 등록 유무 옵션",
+      "value": "true",
+      "list": [
+        {
+          "listValue": "true",
+          "listDesc": "PC 32bit 클라이언트 설치파일 등록 가능"
+        },
+        {
+          "listValue": "false",
+          "listDesc": "PC 32bit 클라이언트 설치파일 등록 불가능"
+        }
+      ]
+    },
+    "installMoblieAppOption": {
+      "desc": "플랫폼 환경설정 모바일 클라이언트 설치파일 등록 유무 옵션",
+      "value": "false",
+      "list": [
+        {
+          "listValue": "true",
+          "listDesc": "모바일앱 설치파일 등록 가능"
+        },
+        {
+          "listValue": "false",
+          "listDesc": "모바일앱 클라이언트 설치파일 등록 불가능"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "64f6d3764318779cddb5a23a"
+  },
+  "featureId": "F91000",
+  "option": {
+    "forecastUseableOption": {
+      "desc": "예상 컴포넌트 표출 유무 옵션(선택된카메라통행량수 포함)",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "on",
+          "listDesc": "예상 컴포넌트 표출함"
+        },
+        {
+          "listValue": "off",
+          "listDesc": "예상 컴포넌트 표출 안함"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "68524b2207bb0ad009e2d56c"
+  },
+  "featureId": "AF31000",
+  "option": {
+    "HaveObjectFromTo": {
+      "desc": "동선 추적에서 중간에 있는 사진 실행 시 이전의 사진으로부터 오는 이동 표시 표출 여부",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "on",
+          "listDesc": "이전 사진-현재 사진-다음 사진 모든 이동 표시 표출"
+        },
+        {
+          "listValue": "off",
+          "listDesc": "현재 사진-다음 사진으로만 이동 표시 표출"
+        }
+      ]
+    },
+    "CCTVUseAbleOption": {
+      "desc": "AI-Brain CCTV 옵션",
+      "value": "standard",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "CCTV기능 사용 불가능"
+        },
+        {
+          "listValue": "standard",
+          "listDesc": "CCTV 사용 가능"
+        }
+      ]
+    },
+    "FaceUseAbleOption": {
+      "desc": "AI-Brain 얼굴검색 옵션",
+      "value": "standard",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "얼굴검색기능 사용 불가능"
+        },
+        {
+          "listValue": "standard",
+          "listDesc": "얼굴검색기능 사용 가능"
+        }
+      ]
+    },
+    "showLinkTrackingOption": {
+      "desc": "AI-Brain 지도 노드링크 추적 기능 옵션",
+      "value": "disAble",
+      "list": [
+        {
+          "listValue": "disAble",
+          "listDesc": "노드링크 추적 사용 불가능"
+        },
+        {
+          "listValue": "use-off",
+          "listDesc": "노드링크 추적 사용가능(버튼 off에서 시작)"
+        },
+        {
+          "listValue": "use-on",
+          "listDesc": "노드링크 추적 사용가능(버튼 on에서 시작)"
+        }
+      ]
+    },
+    "resultColumnCountOption": {
+      "desc": "검색결과 한줄당 이미지 갯수 옵션",
+      "value": "5",
+      "list": [
+        {
+          "listValue": "2",
+          "listDesc": "2개씩 표출"
+        },
+        {
+          "listValue": "3",
+          "listDesc": "3개씩 표출"
+        },
+        {
+          "listValue": "4",
+          "listDesc": "4개씩 표출"
+        },
+        {
+          "listValue": "5",
+          "listDesc": "5개씩 표출"
+        }
+      ]
+    },
+    "miniMap": {
+      "desc": "미니맵 표출여부 옵션",
+      "value": "on",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "미니맵 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "미니맵 표출"
+        }
+      ]
+    },
+    "cameraTagList": {
+      "desc": "AI-Brain 카메라 선택 시 선택된 카메라를 태그로 보여주는 옵션",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "선택 카메라 태그 리스트 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "선택 카메라 태그 리스트 표출"
+        }
+      ]
+    },
+    "hiddenFace": {
+      "desc": "얼굴사진(detectType:2)의 경우 blur 처리되고 확인하려면 인증 필요한 옵션",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "얼굴 사진 제한 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "얼굴 사진 시 blur처리됨"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "68524b6007bb0ad009e2d56d"
+  },
+  "featureId": "AF33100",
+  "option": {
+    "HaveObjectFromTo": {
+      "desc": "동선 추적에서 중간에 있는 사진 실행 시 이전의 사진으로부터 오는 이동 표시 표출 여부",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "on",
+          "listDesc": "이전 사진-현재 사진-다음 사진 모든 이동 표시 표출"
+        },
+        {
+          "listValue": "off",
+          "listDesc": "현재 사진-다음 사진으로만 이동 표시 표출"
+        }
+      ]
+    },
+    "CCTVUseAbleOption": {
+      "desc": "AI-Brain CCTV 옵션",
+      "value": "standard",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "CCTV기능 사용 불가능"
+        },
+        {
+          "listValue": "standard",
+          "listDesc": "CCTV 사용 가능"
+        }
+      ]
+    },
+    "FaceUseAbleOption": {
+      "desc": "AI-Brain 얼굴검색 옵션",
+      "value": "standard",
+      "list": [
+        {
+          "listValue": "lite",
+          "listDesc": "얼굴검색기능 사용 불가능"
+        },
+        {
+          "listValue": "standard",
+          "listDesc": "얼굴검색기능 사용 가능"
+        }
+      ]
+    },
+    "showLinkTrackingOption": {
+      "desc": "AI-Brain 지도 노드링크 추적 기능 옵션",
+      "value": "disAble",
+      "list": [
+        {
+          "listValue": "disAble",
+          "listDesc": "노드링크 추적 사용 불가능"
+        },
+        {
+          "listValue": "use-off",
+          "listDesc": "노드링크 추적 사용가능(버튼 off에서 시작)"
+        },
+        {
+          "listValue": "use-on",
+          "listDesc": "노드링크 추적 사용가능(버튼 on에서 시작)"
+        }
+      ]
+    },
+    "resultColumnCountOption": {
+      "desc": "검색결과 한줄당 이미지 갯수 옵션",
+      "value": "5",
+      "list": [
+        {
+          "listValue": "2",
+          "listDesc": "2개씩 표출"
+        },
+        {
+          "listValue": "3",
+          "listDesc": "3개씩 표출"
+        },
+        {
+          "listValue": "4",
+          "listDesc": "4개씩 표출"
+        },
+        {
+          "listValue": "5",
+          "listDesc": "5개씩 표출"
+        }
+      ]
+    },
+    "miniMap": {
+      "desc": "미니맵 표출여부 옵션",
+      "value": "on",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "미니맵 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "미니맵 표출"
+        }
+      ]
+    },
+    "cameraTagList": {
+      "desc": "AI-Brain 카메라 선택 시 선택된 카메라를 태그로 보여주는 옵션",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "선택 카메라 태그 리스트 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "선택 카메라 태그 리스트 표출"
+        }
+      ]
+    },
+    "hiddenFace": {
+      "desc": "얼굴사진(detectType:2)의 경우 blur 처리되고 확인하려면 인증 필요한 옵션",
+      "value": "off",
+      "list": [
+        {
+          "listValue": "off",
+          "listDesc": "얼굴 사진 제한 없음"
+        },
+        {
+          "listValue": "on",
+          "listDesc": "얼굴 사진 시 blur처리됨"
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "6867281002dc32ba1627ccc5"
+  },
+  "featureId": "F92000",
+  "option": {
+    "useExcelAboutMassed": {
+      "desc": "밀집 관련 엑셀 통계 사용 유무",
+      "value": "on",
+      "list": [
+        {
+          "listValue": "on",
+          "listDesc": "밀집 관련 엑셀 통계 사용"
+        },
+        {
+          "listValue": "off",
+          "listDesc": "밀집 관련 엑셀 통계 미사용"
+        }
+      ]
+    }
+  }
+}]

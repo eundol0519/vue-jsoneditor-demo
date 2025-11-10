@@ -1,0 +1,48 @@
+[{
+  "_id": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "order": 1,
+  "flag": true,
+  "desc": "",
+  "label": "사람",
+  "value": "people",
+  "detectType": 0,
+  "searchableDate": 30
+},
+{
+  "_id": {
+    "$oid": "623d18888ebe9c95f1b395e2"
+  },
+  "order": 4,
+  "flag": true,
+  "desc": "",
+  "label": "차량번호",
+  "value": "plate",
+  "detectType": 3,
+  "searchableDate": 12
+},
+{
+  "_id": {
+    "$oid": "623d18e18ebe9c95f1b3965f"
+  },
+  "order": 3,
+  "flag": true,
+  "desc": "",
+  "label": "차량",
+  "value": "vehicle",
+  "detectType": 1,
+  "searchableDate": 15
+},
+{
+  "_id": {
+    "$oid": "63031a95bbd0d8de8063c047"
+  },
+  "order": 2,
+  "flag": true,
+  "desc": "",
+  "label": "얼굴",
+  "value": "face",
+  "detectType": 2,
+  "searchableDate": 20
+}]

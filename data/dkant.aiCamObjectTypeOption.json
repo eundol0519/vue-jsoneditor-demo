@@ -1,0 +1,693 @@
+[{
+  "_id": {
+    "$oid": "623c20738ebe9c95f1b2c9df"
+  },
+  "order": 1,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "컬렉션 타입",
+  "label": "타입",
+  "value": "collectionType",
+  "type": {
+    "typeName": "select",
+    "isMultiple": false,
+    "multipleLimit": 0,
+    "group": [
+      {
+        "value": "all",
+        "label": "전체"
+      },
+      {
+        "value": "face",
+        "label": "얼굴"
+      },
+      {
+        "value": "body",
+        "label": "전신"
+      }
+    ]
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "623d25c98ebe9c95f1b3b9bd"
+  },
+  "order": 2,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": true,
+  "desc": "성별",
+  "label": "성별",
+  "value": "genderType",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 0,
+        "label": "남자"
+      },
+      {
+        "value": 1,
+        "label": "여자"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "623d26298ebe9c95f1b3ba83"
+  },
+  "order": 3,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": true,
+  "desc": "나이",
+  "label": "나이",
+  "value": "ageType",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 999,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 0,
+        "label": "어린이"
+      },
+      {
+        "value": 1,
+        "label": "성인"
+      },
+      {
+        "value": 2,
+        "label": "중년"
+      },
+      {
+        "value": 3,
+        "label": "노인"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "623d26698ebe9c95f1b3bafc"
+  },
+  "order": 4,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": true,
+  "desc": "모자",
+  "label": "모자",
+  "value": "hatDetection",
+  "type": {
+    "typeName": "select",
+    "isMultiple": false,
+    "multipleLimit": 0,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "착용"
+      },
+      {
+        "value": 0,
+        "label": "미착용"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "623d269d8ebe9c95f1b3bb66"
+  },
+  "order": 5,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "안경",
+  "label": "안경",
+  "value": "opticals",
+  "type": {
+    "typeName": "select",
+    "isMultiple": false,
+    "multipleLimit": 0,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "착용"
+      },
+      {
+        "value": 0,
+        "label": "미착용"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "623d27498ebe9c95f1b3bcfc"
+  },
+  "order": 6,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "마스크",
+  "label": "마스크",
+  "value": "mask",
+  "type": {
+    "typeName": "select",
+    "isMultiple": false,
+    "multipleLimit": 0,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "착용"
+      },
+      {
+        "value": 0,
+        "label": "미착용"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "623d27fe8ebe9c95f1b3be55"
+  },
+  "order": 10,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": true,
+  "desc": "상의색상",
+  "label": "상의색상",
+  "value": "topColor",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": 1,
+        "label": "검정색"
+      },
+      {
+        "value": 2,
+        "label": "회색"
+      },
+      {
+        "value": 3,
+        "label": "흰색"
+      },
+      {
+        "value": 4,
+        "label": "빨간색"
+      },
+      {
+        "value": 5,
+        "label": "주황색"
+      },
+      {
+        "value": 6,
+        "label": "노란색"
+      },
+      {
+        "value": 7,
+        "label": "초록색"
+      },
+      {
+        "value": 8,
+        "label": "파란색"
+      },
+      {
+        "value": 9,
+        "label": "보라색"
+      }
+    ]
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "623d28228ebe9c95f1b3be9c"
+  },
+  "order": 11,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": true,
+  "desc": "하의색상",
+  "label": "하의색상",
+  "value": "bottomColor",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": 1,
+        "label": "검정색"
+      },
+      {
+        "value": 2,
+        "label": "회색"
+      },
+      {
+        "value": 3,
+        "label": "흰색"
+      },
+      {
+        "value": 4,
+        "label": "빨간색"
+      },
+      {
+        "value": 5,
+        "label": "주황색"
+      },
+      {
+        "value": 6,
+        "label": "노란색"
+      },
+      {
+        "value": 7,
+        "label": "초록색"
+      },
+      {
+        "value": 8,
+        "label": "파란색"
+      },
+      {
+        "value": 9,
+        "label": "보라색"
+      }
+    ]
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "623d28928ebe9c95f1b3bf92"
+  },
+  "order": 102,
+  "objectTypeId": {
+    "$oid": "623d18e18ebe9c95f1b3965f"
+  },
+  "flag": true,
+  "desc": "차량색상",
+  "label": "차량색상",
+  "value": "vehicleColor",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": 1,
+        "label": "검정색"
+      },
+      {
+        "value": 2,
+        "label": "회색"
+      },
+      {
+        "value": 3,
+        "label": "흰색"
+      },
+      {
+        "value": 4,
+        "label": "빨간색"
+      },
+      {
+        "value": 5,
+        "label": "주황색"
+      },
+      {
+        "value": 6,
+        "label": "노란색"
+      },
+      {
+        "value": 7,
+        "label": "초록색"
+      },
+      {
+        "value": 8,
+        "label": "파란색"
+      },
+      {
+        "value": 9,
+        "label": "보라색"
+      }
+    ]
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "623d28d88ebe9c95f1b3c017"
+  },
+  "order": 101,
+  "objectTypeId": {
+    "$oid": "623d18e18ebe9c95f1b3965f"
+  },
+  "flag": true,
+  "desc": "차량종류",
+  "label": "차량종류",
+  "value": "vehicleType",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 5,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "승용/승합차"
+      },
+      {
+        "value": 2,
+        "label": "버스"
+      },
+      {
+        "value": 3,
+        "label": "트럭"
+      },
+      {
+        "value": 4,
+        "label": "오토바이"
+      },
+      {
+        "value": 5,
+        "label": "자전거"
+      }
+    ]
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "623d292c8ebe9c95f1b3c0bd"
+  },
+  "order": 201,
+  "objectTypeId": {
+    "$oid": "623d18888ebe9c95f1b395e2"
+  },
+  "flag": true,
+  "desc": "차량번호",
+  "label": "차량번호",
+  "value": "plateNumber",
+  "type": {
+    "typeName": "input"
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "62468642714f7e27099e9776"
+  },
+  "order": 8,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": true,
+  "desc": "가방타입",
+  "label": "가방타입",
+  "value": "bagType",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 3,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": -1,
+        "label": "미사용"
+      },
+      {
+        "value": 0,
+        "label": "핸드백"
+      },
+      {
+        "value": 1,
+        "label": "백팩"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "6246864e714f7e27099e9a2b"
+  },
+  "order": 9,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "헬멧",
+  "label": "헬멧",
+  "value": "helmet",
+  "type": {
+    "typeName": "select",
+    "isMultiple": false,
+    "multipleLimit": 0,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "착용"
+      },
+      {
+        "value": 0,
+        "label": "미착용"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "6246bae6714f7e2709a8b279"
+  },
+  "order": 501,
+  "objectTypeId": {
+    "$oid": "63031a95bbd0d8de8063c047"
+  },
+  "flag": true,
+  "desc": "이미지 검색",
+  "label": "이미지 검색",
+  "value": "searchImage",
+  "type": {
+    "typeName": "searchImage"
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "6333c3889e2619d78aade625"
+  },
+  "order": 98,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "상의RGB",
+  "label": "상의RGB",
+  "value": "topColorRGB",
+  "type": {
+    "typeName": "input"
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "6333c3bd9e2619d78aade70d"
+  },
+  "order": 99,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "하의RGB",
+  "label": "하의RGB",
+  "value": "bottomColorRGB",
+  "type": {
+    "typeName": "input"
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "6333c46d9e2619d78aade9f7"
+  },
+  "order": 199,
+  "objectTypeId": {
+    "$oid": "623d18e18ebe9c95f1b3965f"
+  },
+  "flag": false,
+  "desc": "차량RGB",
+  "label": "차량RGB",
+  "value": "vehicleColorRGB",
+  "type": {
+    "typeName": "input"
+  },
+  "class": "option-w-full"
+},
+{
+  "_id": {
+    "$oid": "65a0874a027fa83df2989eb9"
+  },
+  "order": 8,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "상의 길이",
+  "label": "상의 길이",
+  "value": "topLength",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "긴 상의"
+      },
+      {
+        "value": 0,
+        "label": "짧은 상의"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "65a0876d027fa83df2989f0b"
+  },
+  "order": 9,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "하의 길이",
+  "label": "하의 길이",
+  "value": "bottomLength",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "긴 하의"
+      },
+      {
+        "value": 0,
+        "label": "짧은 하의"
+      }
+    ]
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "6847c517406886773938361b"
+  },
+  "order": 1,
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "flag": false,
+  "desc": "이미지 검색",
+  "label": "이미지 검색",
+  "value": "searchImage",
+  "type": {
+    "typeName": "searchImage"
+  },
+  "class": ""
+},
+{
+  "_id": {
+    "$oid": "68c0da4179a9ce80e5c0583c"
+  },
+  "objectTypeId": {
+    "$oid": "623c1f8b8ebe9c95f1b2c6bc"
+  },
+  "order": 58,
+  "flag": true,
+  "desc": "가방유무",
+  "label": "가방유무",
+  "value": "bagDetection",
+  "type": {
+    "typeName": "select",
+    "isMultiple": true,
+    "multipleLimit": 2,
+    "group": [
+      {
+        "value": -999,
+        "label": "전체"
+      },
+      {
+        "value": 1,
+        "label": "착용"
+      },
+      {
+        "value": 0,
+        "label": "미착용"
+      }
+    ]
+  },
+  "class": ""
+}]
