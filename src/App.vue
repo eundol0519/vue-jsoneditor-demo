@@ -252,8 +252,13 @@ const cancelEdit = () => {
 
 // 초기화
 const clearData = () => {
+    if (!hasChanges.value) {
+        ElMessage.info('변경된 내용이 없습니다.');
+        return;
+    }
+
     ElMessageBox.confirm(
-        '컬렉션의 원본 데이터로 초기화하시겠습니까?',
+        '저장된 시점의 원본 데이터로 초기화하시겠습니까?',
         '데이터 초기화',
         {
             confirmButtonText: '초기화',
@@ -261,24 +266,12 @@ const clearData = () => {
             type: 'warning',
         }
     ).then(() => {
-        if (editor && selectedFile.value && testDataMap[selectedFile.value]) {
-            // 원본 데이터 재로드
-            testDataMap[selectedFile.value]().then((data) => {
-                originalData.value = JSON.parse(JSON.stringify(data));
-                editor.set(data);
-                hasChanges.value = false;
-                updateTimestamp();
-                ElMessage.success('데이터가 초기화되었습니다.');
-            }).catch(() => {
-                ElMessage.error('데이터 로드에 실패했습니다.');
-            });
-        } else if (editor && !selectedFile.value) {
-            // 샘플 데이터로 초기화
-            originalData.value = JSON.parse(JSON.stringify(sampleData));
-            editor.set(sampleData);
+        if (editor && originalData.value) {
+            // 저장된 원본 데이터로 복원
+            editor.set(JSON.parse(JSON.stringify(originalData.value)));
             hasChanges.value = false;
             updateTimestamp();
-            ElMessage.success('데이터가 초기화되었습니다.');
+            ElMessage.success('저장된 상태로 초기화되었습니다.');
         }
     }).catch(() => {
         // 취소됨
