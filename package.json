@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "vue": "^3.3.0",
-    "jsoneditor": "^10.0.0"
+    "jsoneditor": "^10.0.0",
+    "element-plus": "^2.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
