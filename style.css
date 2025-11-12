@@ -16,11 +16,47 @@ body {
   margin: 0 auto;
 }
 
-.container {
+/* Navigation Tabs */
+.app-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+}
+
+.navigation-tabs {
+  display: flex;
+  gap: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0;
+}
+
+.nav-tab {
+  flex: 1;
+  padding: 18px 30px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-tab:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tab.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border-bottom-color: white;
+}
+
+.container {
+  background: white;
 }
 
 .header {
@@ -268,4 +304,3 @@ body {
   font-size: 13px;
   color: #1565c0;
 }
-

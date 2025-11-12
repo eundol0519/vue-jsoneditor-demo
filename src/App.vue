@@ -1,58 +1,79 @@
 <template>
-    <div class="container">
-        <div class="header">
-            <h1>📝 JSONEditor</h1>
-            <p>josdejong/jsoneditor 사용 예시</p>
+    <div class="app-container">
+        <div class="navigation-tabs">
+            <button 
+                class="nav-tab" 
+                :class="{ active: currentView === 'jsoneditor' }"
+                @click="currentView = 'jsoneditor'"
+            >
+                📝 JSONEditor
+            </button>
+            <button 
+                class="nav-tab" 
+                :class="{ active: currentView === 'pageoption' }"
+                @click="currentView = 'pageoption'"
+            >
+                📄 Page Option Editor
+            </button>
         </div>
 
-        <div class="content">
-            <!-- JSONEditor 패널 -->
-            <div class="panel" style="grid-column: 1 / -1">
-                <div class="panel-title">📝 JSONEditor (편집 가능)</div>
-                <div class="panel-content">
-                    <div class="info-box">✨ josdejong/jsoneditor - 완벽한 JSON 에디터</div>
-                    <div ref="editorContainer" class="jsoneditor-container"></div>
+        <PageOptionEditor v-if="currentView === 'pageoption'" />
+        
+        <div v-else class="container">
+            <div class="header">
+                <h1>📝 JSONEditor</h1>
+                <p>josdejong/jsoneditor 사용 예시</p>
+            </div>
+
+            <div class="content">
+                <!-- JSONEditor 패널 -->
+                <div class="panel" style="grid-column: 1 / -1">
+                    <div class="panel-title">📝 JSONEditor (편집 가능)</div>
+                    <div class="panel-content">
+                        <div class="info-box">✨ josdejong/jsoneditor - 완벽한 JSON 에디터</div>
+                        <div ref="editorContainer" class="jsoneditor-container"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="controls">
-            <div class="select-group">
-                <label for="file-select">📂 테스트 데이터 선택:</label>
-                <select id="file-select" v-model="selectedFile" @change="handleFileChange" class="select-input">
-                    <option value="">-- 선택하세요 --</option>
-                    <option value="aiCamObjectType">AI 카메라 객체 타입</option>
-                    <option value="aiCamObjectTypeOption">AI 카메라 객체 타입 옵션</option>
-                    <option value="pageOption">페이지 옵션</option>
-                </select>
+            <div class="controls">
+                <div class="select-group">
+                    <label for="file-select">📂 테스트 데이터 선택:</label>
+                    <select id="file-select" v-model="selectedFile" @change="handleFileChange" class="select-input">
+                        <option value="">-- 선택하세요 --</option>
+                        <option value="aiCamObjectType">AI 카메라 객체 타입</option>
+                        <option value="aiCamObjectTypeOption">AI 카메라 객체 타입 옵션</option>
+                        <option value="pageOption">페이지 옵션</option>
+                    </select>
+                </div>
+                <button class="btn btn-danger" @click="clearData">🗑️ 초기화</button>
+                <button 
+                    class="btn btn-save" 
+                    @click="saveData"
+                    :disabled="!hasChanges"
+                >
+                    💾 저장
+                </button>
+                <button 
+                    class="btn btn-cancel" 
+                    @click="cancelEdit"
+                    :disabled="!hasChanges"
+                >
+                    ❌ 취소
+                </button>
             </div>
-            <button class="btn btn-danger" @click="clearData">🗑️ 초기화</button>
-            <button 
-                class="btn btn-save" 
-                @click="saveData"
-                :disabled="!hasChanges"
-            >
-                💾 저장
-            </button>
-            <button 
-                class="btn btn-cancel" 
-                @click="cancelEdit"
-                :disabled="!hasChanges"
-            >
-                ❌ 취소
-            </button>
-        </div>
 
-        <div class="status">
-            <span>현재 JSON 크기: {{ currentSize }} bytes</span>
-            <span v-if="hasChanges" class="status-warning">⚠️ 수정된 내용이 있습니다</span>
-            <span>최근 업데이트: {{ lastUpdate }}</span>
-        </div>
+            <div class="status">
+                <span>현재 JSON 크기: {{ currentSize }} bytes</span>
+                <span v-if="hasChanges" class="status-warning">⚠️ 수정된 내용이 있습니다</span>
+                <span>최근 업데이트: {{ lastUpdate }}</span>
+            </div>
 
-        <div class="footer">
-            <p>
-                💡 팁: 드롭다운에서 데이터를 선택하면 에디터에 로드됩니다. Tree, Form, Code 모드로 자유롭게 편집하세요!
-            </p>
+            <div class="footer">
+                <p>
+                    💡 팁: 드롭다운에서 데이터를 선택하면 에디터에 로드됩니다. Tree, Form, Code 모드로 자유롭게 편집하세요!
+                </p>
+            </div>
         </div>
     </div>
 </template>
@@ -62,6 +83,9 @@ import { ref, onMounted, computed } from 'vue';
 import JSONEditor from 'jsoneditor';
 import 'jsoneditor/dist/jsoneditor.css';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import PageOptionEditor from './PageOptionEditor.vue';
+
+const currentView = ref('pageoption');
 
 const editorContainer = ref(null);
 let editor = null;
