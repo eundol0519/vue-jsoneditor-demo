@@ -244,39 +244,57 @@
                 v-for="template in filteredManagerTemplates" 
                 :key="template.key"
                 class="template-manager-item"
+                :class="{ expanded: expandedTemplates.includes(template.key) }"
               >
-                <div class="template-manager-header">
-                  <div>
+                <div class="template-manager-header" @click="toggleTemplate(template.key)">
+                  <div class="template-header-left">
+                    <span class="expand-icon">{{ expandedTemplates.includes(template.key) ? '▼' : '▶' }}</span>
                     <strong class="template-key">{{ template.key }}</strong>
                     <span class="template-badge">{{ template.count }}개 Feature에서 사용</span>
                   </div>
+                  <div class="template-actions" @click.stop>
+                    <button class="btn btn-edit-small" @click="editTemplate(template)" title="수정">
+                      ✏️ 수정
+                    </button>
+                    <button 
+                      class="btn btn-delete-small" 
+                      @click="deleteTemplate(template)" 
+                      title="삭제"
+                    >
+                      🗑️ 삭제
+                    </button>
+                  </div>
                 </div>
-                <div class="template-manager-body">
-                  <div class="template-field">
-                    <label>설명:</label>
-                    <p>{{ template.desc }}</p>
-                  </div>
-                  <div class="template-field">
-                    <label>기본값:</label>
-                    <code>{{ template.defaultValue }}</code>
-                  </div>
-                  <div class="template-field">
-                    <label>리스트 항목 ({{ template.listCount }}개):</label>
-                    <ul class="template-list-preview">
-                      <li v-for="(item, idx) in template.sampleList" :key="idx">
-                        <code>{{ item.listValue }}</code> - {{ item.listDesc }}
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="template-usage">
-                    <label>사용 위치:</label>
-                    <div class="usage-tags">
-                      <span v-for="featureId in template.usedIn" :key="featureId" class="usage-tag">
-                        {{ featureId }}
-                      </span>
+                <transition name="slide-down">
+                  <div v-if="expandedTemplates.includes(template.key)" class="template-manager-body">
+                    <div class="template-field">
+                      <label>설명:</label>
+                      <p>{{ template.desc || '설명 없음' }}</p>
+                    </div>
+                    <div class="template-field">
+                      <label>기본값:</label>
+                      <code>{{ template.defaultValue || '값 없음' }}</code>
+                    </div>
+                    <div class="template-field">
+                      <label>리스트 항목 ({{ template.listCount || 0 }}개):</label>
+                      <ul class="template-list-preview" v-if="template.sampleList && template.sampleList.length > 0">
+                        <li v-for="(item, idx) in template.sampleList" :key="idx">
+                          <code>{{ item.listValue }}</code> - {{ item.listDesc }}
+                        </li>
+                      </ul>
+                      <p v-else class="no-usage">리스트 항목이 없습니다</p>
+                    </div>
+                    <div class="template-usage">
+                      <label>사용 위치:</label>
+                      <div class="usage-tags">
+                        <span v-for="featureId in template.usedIn" :key="featureId" class="usage-tag">
+                          {{ featureId }}
+                        </span>
+                        <span v-if="!template.usedIn || template.usedIn.length === 0" class="no-usage">사용 중인 Feature 없음</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </transition>
               </div>
               <div v-if="filteredManagerTemplates.length === 0" class="empty-state-small">
                 검색 결과가 없습니다.
@@ -290,7 +308,7 @@
       <div v-if="showCreateTemplateModal" class="modal-overlay" @click="closeCreateTemplateModal">
         <div class="modal-content" @click.stop>
           <div class="modal-header">
-            <h2>➕ 새 템플릿 만들기</h2>
+            <h2>{{ editingTemplate ? '✏️ 템플릿 수정' : '➕ 새 템플릿 만들기' }}</h2>
             <button class="btn-close" @click="closeCreateTemplateModal">✕</button>
           </div>
           <div class="modal-body">
@@ -301,7 +319,11 @@
                 type="text" 
                 placeholder="예: excelInputAbleOption"
                 class="form-input"
+                :disabled="!!editingTemplate"
               />
+              <div v-if="editingTemplate" class="input-hint">
+                템플릿 Key는 수정할 수 없습니다.
+              </div>
             </div>
             <div class="form-group">
               <label>설명 *</label>
@@ -357,8 +379,8 @@
               <button class="btn btn-secondary" @click="closeCreateTemplateModal">
                 취소
               </button>
-              <button class="btn btn-primary" @click="createTemplate">
-                템플릿 생성
+              <button class="btn btn-primary" @click="editingTemplate ? updateTemplate() : createTemplate()">
+                {{ editingTemplate ? '수정 완료' : '템플릿 생성' }}
               </button>
             </div>
           </div>
@@ -384,6 +406,8 @@ const showTemplateManagerModal = ref(false);
 const showCreateTemplateModal = ref(false);
 const templateSearch = ref('');
 const templateManagerSearch = ref('');
+const editingTemplate = ref(null);
+const expandedTemplates = ref([]); // 확장된 템플릿 추적 (배열로 변경)
 const newTemplate = ref({
   key: '',
   desc: '',
@@ -522,8 +546,9 @@ const selectOption = (key) => {
 
 // Feature 추가
 const addFeature = async () => {
+  console.log('addFeature 호출됨');
   try {
-    const { value } = await ElMessageBox.prompt('새 Feature ID를 입력하세요', 'Feature 추가', {
+    const result = await ElMessageBox.prompt('새 Feature ID를 입력하세요', 'Feature 추가', {
       confirmButtonText: '추가',
       cancelButtonText: '취소',
       inputPattern: /^[A-Z0-9]+$/,
@@ -531,13 +556,15 @@ const addFeature = async () => {
       inputPlaceholder: '예: F99000',
     });
 
-    if (!value || value.trim() === '') {
+    console.log('prompt 결과:', result);
+
+    if (!result.value || result.value.trim() === '') {
       ElMessage.error('Feature ID를 입력해주세요.');
       return;
     }
 
     // 이미 존재하는지 확인
-    const exists = pageOptions.value.some(f => f.featureId === value);
+    const exists = pageOptions.value.some(f => f.featureId === result.value);
     if (exists) {
       ElMessage.error('이미 존재하는 Feature ID입니다.');
       return;
@@ -547,7 +574,7 @@ const addFeature = async () => {
       _id: {
         $oid: generateObjectId(),
       },
-      featureId: value,
+      featureId: result.value,
       option: {},
     };
     
@@ -555,18 +582,21 @@ const addFeature = async () => {
     selectedFeatureIndex.value = pageOptions.value.length - 1;
     selectedOptionKey.value = null;
     editingOptionKey.value = '';
-    ElMessage.success(`Feature "${value}"가 추가되었습니다.`);
+    ElMessage.success(`Feature "${result.value}"가 추가되었습니다.`);
   } catch (err) {
     // 취소됨 또는 에러
-    if (err !== 'cancel') {
+    if (err !== 'cancel' && err !== 'close') {
       console.error('Feature 추가 오류:', err);
+      ElMessage.error('Feature 추가 중 오류가 발생했습니다: ' + err.message);
     }
   }
 };
 
 // Feature 삭제
 const deleteFeature = async (index, event) => {
-  // 이벤트 전파 중지 (이미 @click.stop이 있지만 추가 보장)
+  console.log('deleteFeature 호출됨, index:', index);
+  
+  // 이벤트 전파 중지
   if (event) {
     event.stopPropagation();
     event.preventDefault();
@@ -574,6 +604,7 @@ const deleteFeature = async (index, event) => {
 
   const feature = pageOptions.value[index];
   if (!feature) {
+    console.error('Feature를 찾을 수 없음, index:', index);
     ElMessage.error('삭제할 Feature를 찾을 수 없습니다.');
     return;
   }
@@ -589,6 +620,8 @@ const deleteFeature = async (index, event) => {
       }
     );
 
+    console.log('삭제 확인됨, 삭제 실행');
+    
     // 삭제 실행
     pageOptions.value.splice(index, 1);
     
@@ -604,7 +637,7 @@ const deleteFeature = async (index, event) => {
     ElMessage.success('Feature가 삭제되었습니다.');
   } catch (err) {
     // 취소됨
-    console.log('Feature 삭제 취소');
+    console.log('Feature 삭제 취소 또는 에러:', err);
   }
 };
 
@@ -684,17 +717,45 @@ const closeTemplateModal = () => {
 // 템플릿 관리자 열기
 const showTemplateManager = () => {
   showTemplateManagerModal.value = true;
+  // 처음 열 때는 모든 템플릿 접기
+  expandedTemplates.value = [];
 };
 
 // 템플릿 관리자 모달 닫기
 const closeTemplateManagerModal = () => {
   showTemplateManagerModal.value = false;
   templateManagerSearch.value = '';
+  expandedTemplates.value = [];
+};
+
+// 템플릿 확장/축소 토글
+const toggleTemplate = (key) => {
+  console.log('=== toggleTemplate 호출 ===');
+  console.log('클릭한 템플릿 key:', key);
+  console.log('현재 expandedTemplates:', JSON.stringify(expandedTemplates.value));
+  
+  const index = expandedTemplates.value.indexOf(key);
+  console.log('indexOf 결과:', index);
+  
+  if (index > -1) {
+    // 이미 펼쳐져 있으면 접기
+    expandedTemplates.value.splice(index, 1);
+    console.log('✅ 템플릿 접기 완료:', key);
+  } else {
+    // 접혀 있으면 펼치기
+    expandedTemplates.value.push(key);
+    console.log('✅ 템플릿 펼치기 완료:', key);
+  }
+  
+  console.log('업데이트 후 expandedTemplates:', JSON.stringify(expandedTemplates.value));
+  console.log('includes 테스트:', expandedTemplates.value.includes(key));
+  console.log('=========================');
 };
 
 // 템플릿 생성 모달 닫기
 const closeCreateTemplateModal = () => {
   showCreateTemplateModal.value = false;
+  editingTemplate.value = null;
   newTemplate.value = {
     key: '',
     desc: '',
@@ -713,6 +774,102 @@ const addNewTemplateListItem = () => {
 // 새 템플릿에서 리스트 항목 삭제
 const deleteNewTemplateListItem = (index) => {
   newTemplate.value.list.splice(index, 1);
+};
+
+// 템플릿 편집
+const editTemplate = (template) => {
+  editingTemplate.value = template.key;
+  newTemplate.value = {
+    key: template.key,
+    desc: template.desc,
+    list: JSON.parse(JSON.stringify(template.sampleList || template.list || []))
+  };
+  showCreateTemplateModal.value = true;
+};
+
+// 템플릿 수정
+const updateTemplate = () => {
+  if (!newTemplate.value.desc || !newTemplate.value.desc.trim()) {
+    ElMessage.error('템플릿 설명을 입력해주세요.');
+    return;
+  }
+
+  const templateKey = editingTemplate.value;
+  
+  // 커스텀 템플릿 찾아서 업데이트
+  const customIndex = customTemplates.value.findIndex(t => t.key === templateKey);
+  if (customIndex !== -1) {
+    const updatedTemplate = {
+      key: templateKey,
+      desc: newTemplate.value.desc.trim(),
+      list: JSON.parse(JSON.stringify(newTemplate.value.list)),
+      defaultValue: (newTemplate.value.list.length > 0) ? newTemplate.value.list[0].listValue : '',
+      listCount: newTemplate.value.list.length,
+      sampleList: JSON.parse(JSON.stringify(newTemplate.value.list))
+    };
+    
+    customTemplates.value[customIndex] = updatedTemplate;
+    saveCustomTemplates();
+    
+    // 사용 중인 Feature들의 해당 Option도 업데이트
+    updateFeaturesWithTemplate(templateKey, updatedTemplate);
+  }
+  
+  closeCreateTemplateModal();
+  ElMessage.success(`템플릿 "${templateKey}"가 수정되었습니다.`);
+};
+
+// Feature들의 템플릿 업데이트
+const updateFeaturesWithTemplate = (templateKey, updatedTemplate) => {
+  pageOptions.value.forEach(feature => {
+    if (feature.option && feature.option[templateKey]) {
+      // desc와 list를 업데이트, value는 유지
+      feature.option[templateKey].desc = updatedTemplate.desc;
+      feature.option[templateKey].list = JSON.parse(JSON.stringify(updatedTemplate.list));
+    }
+  });
+};
+
+// 템플릿 삭제
+const deleteTemplate = async (template) => {
+  try {
+    let warningMessage = `템플릿 "${template.key}"를 삭제하시겠습니까?`;
+    
+    if (template.count > 0) {
+      warningMessage += `\n\n⚠️ 이 템플릿은 현재 ${template.count}개의 Feature에서 사용 중입니다.\n삭제 시 해당 Feature들의 Option도 함께 삭제됩니다.`;
+    }
+    
+    await ElMessageBox.confirm(
+      warningMessage,
+      '템플릿 삭제',
+      {
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소',
+        type: 'warning',
+        dangerouslyUseHTMLString: true,
+      }
+    );
+
+    // 커스텀 템플릿에서 삭제
+    const customIndex = customTemplates.value.findIndex(t => t.key === template.key);
+    if (customIndex !== -1) {
+      customTemplates.value.splice(customIndex, 1);
+      saveCustomTemplates();
+    }
+
+    // 사용 중인 Feature들에서 해당 Option 삭제
+    if (template.count > 0) {
+      pageOptions.value.forEach(feature => {
+        if (feature.option && feature.option[template.key]) {
+          delete feature.option[template.key];
+        }
+      });
+    }
+
+    ElMessage.success(`템플릿 "${template.key}"가 삭제되었습니다.`);
+  } catch (err) {
+    console.log('템플릿 삭제 취소');
+  }
 };
 
 // 템플릿 생성
@@ -850,42 +1007,52 @@ const deleteListItem = (index) => {
 };
 
 // 변경사항 저장
-const saveChanges = () => {
-  ElMessageBox.confirm(
-    '변경사항을 저장하시겠습니까?\n(실제 파일은 저장되지 않으며, 브라우저 세션에만 저장됩니다)',
-    '저장 확인',
-    {
-      confirmButtonText: '저장',
-      cancelButtonText: '취소',
-      type: 'info',
-    }
-  ).then(() => {
+const saveChanges = async () => {
+  console.log('saveChanges 호출됨');
+  try {
+    await ElMessageBox.confirm(
+      '변경사항을 저장하시겠습니까?\n(실제 파일은 저장되지 않으며, 브라우저 세션에만 저장됩니다)',
+      '저장 확인',
+      {
+        confirmButtonText: '저장',
+        cancelButtonText: '취소',
+        type: 'info',
+      }
+    );
+    
     originalData.value = JSON.parse(JSON.stringify(pageOptions.value));
     ElMessage.success('변경사항이 저장되었습니다.');
-  }).catch(() => {
+    console.log('저장 완료');
+  } catch (err) {
     // 취소됨
-  });
+    console.log('저장 취소');
+  }
 };
 
 // 초기화
-const resetChanges = () => {
-  ElMessageBox.confirm(
-    '모든 변경사항을 취소하고 원본 데이터로 되돌리시겠습니까?',
-    '초기화 확인',
-    {
-      confirmButtonText: '초기화',
-      cancelButtonText: '취소',
-      type: 'warning',
-    }
-  ).then(() => {
+const resetChanges = async () => {
+  console.log('resetChanges 호출됨');
+  try {
+    await ElMessageBox.confirm(
+      '모든 변경사항을 취소하고 원본 데이터로 되돌리시겠습니까?',
+      '초기화 확인',
+      {
+        confirmButtonText: '초기화',
+        cancelButtonText: '취소',
+        type: 'warning',
+      }
+    );
+    
     pageOptions.value = JSON.parse(JSON.stringify(originalData.value));
     selectedFeatureIndex.value = null;
     selectedOptionKey.value = null;
     editingOptionKey.value = '';
     ElMessage.success('원본 데이터로 초기화되었습니다.');
-  }).catch(() => {
+    console.log('초기화 완료');
+  } catch (err) {
     // 취소됨
-  });
+    console.log('초기화 취소');
+  }
 };
 
 // JSON 내보내기
@@ -941,7 +1108,7 @@ const generateObjectId = () => {
 
 .editor-layout {
   display: grid;
-  grid-template-columns: 300px 400px 1fr;
+  grid-template-columns: 350px 500px 1fr;
   gap: 20px;
   margin-bottom: 20px;
 }
@@ -1333,7 +1500,8 @@ const generateObjectId = () => {
 }
 
 .modal-large {
-  max-width: 1000px;
+  max-width: 1200px;
+  max-height: 85vh;
 }
 
 @keyframes modalSlideIn {
@@ -1483,31 +1651,67 @@ const generateObjectId = () => {
 /* 템플릿 관리자 스타일 */
 .template-manager-list {
   display: grid;
-  gap: 20px;
-  max-height: 500px;
+  gap: 15px;
+  max-height: 600px;
   overflow-y: auto;
 }
 
 .template-manager-item {
-  background: #f8f9fa;
+  background: white;
   border: 2px solid #e9ecef;
   border-radius: 8px;
-  padding: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.template-manager-item.expanded {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
 .template-manager-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #dee2e6;
+  padding: 18px 20px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.template-manager-header:hover {
+  background: #e9ecef;
+}
+
+.template-manager-item.expanded .template-manager-header {
+  background: linear-gradient(135deg, #f0f4ff 0%, #fdf0ff 100%);
+  border-bottom-color: #667eea;
+}
+
+.template-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.expand-icon {
+  font-size: 14px;
+  color: #667eea;
+  font-weight: bold;
+  min-width: 20px;
+}
+
+.template-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .template-key {
   font-size: 18px;
   color: #667eea;
-  margin-right: 10px;
+  font-weight: 700;
 }
 
 .template-badge {
@@ -1519,39 +1723,132 @@ const generateObjectId = () => {
   font-weight: 600;
 }
 
+.template-badge-custom {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn-edit-small {
+  background: #3b82f6;
+  color: white;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-edit-small:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.btn-delete-small {
+  background: #ef4444;
+  color: white;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-delete-small:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.btn-delete-small:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  font-style: italic;
+}
+
 .template-manager-body {
   display: grid;
   gap: 15px;
+  padding: 20px;
+  background: white;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Transition 애니메이션 */
+.slide-down-enter-active {
+  transition: all 0.3s ease;
+}
+
+.slide-down-leave-active {
+  transition: all 0.2s ease;
+}
+
+.slide-down-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .template-field {
-  background: white;
-  padding: 12px;
+  background: #f8f9fa;
+  padding: 15px;
   border-radius: 6px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e9ecef;
 }
 
 .template-field label {
   display: block;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 8px;
   font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .template-field p {
   margin: 0;
   color: #666;
   font-size: 14px;
+  line-height: 1.6;
 }
 
 .template-field code {
   background: #e3f2fd;
   color: #1565c0;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
   font-family: 'Monaco', 'Menlo', monospace;
+  font-weight: 600;
 }
 
 .template-list-preview {
@@ -1561,19 +1858,35 @@ const generateObjectId = () => {
 }
 
 .template-list-preview li {
-  padding: 8px;
+  padding: 10px;
   background: white;
-  border-radius: 4px;
-  margin-bottom: 6px;
+  border-radius: 6px;
+  margin-bottom: 8px;
   font-size: 13px;
-  border-left: 3px solid #667eea;
+  border-left: 4px solid #667eea;
+  transition: all 0.2s ease;
+}
+
+.template-list-preview li:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
 }
 
 .template-usage {
-  background: white;
-  padding: 12px;
+  background: #f8f9fa;
+  padding: 15px;
   border-radius: 6px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e9ecef;
+}
+
+.template-usage label {
+  display: block;
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .usage-tags {
@@ -1586,10 +1899,25 @@ const generateObjectId = () => {
 .usage-tag {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 6px 14px;
+  border-radius: 16px;
   font-size: 12px;
   font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.usage-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(245, 87, 108, 0.3);
+}
+
+.no-usage {
+  color: #999;
+  font-size: 13px;
+  font-style: italic;
+  padding: 6px 14px;
+  background: #f1f3f5;
+  border-radius: 16px;
 }
 
 .btn-primary {

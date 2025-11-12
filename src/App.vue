@@ -1,6 +1,7 @@
 <template>
     <div class="app-container">
-        <div class="navigation-tabs">
+        <!-- JSONEditor 탭 임시 숨김 -->
+        <!-- <div class="navigation-tabs">
             <button 
                 class="nav-tab" 
                 :class="{ active: currentView === 'jsoneditor' }"
@@ -15,18 +16,18 @@
             >
                 📄 Page Option Editor
             </button>
-        </div>
+        </div> -->
 
-        <PageOptionEditor v-if="currentView === 'pageoption'" />
+        <PageOptionEditor />
         
-        <div v-else class="container">
+        <!-- JSONEditor 임시 비활성화 -->
+        <!-- <div v-if="currentView === 'jsoneditor'" class="container">
             <div class="header">
                 <h1>📝 JSONEditor</h1>
                 <p>josdejong/jsoneditor 사용 예시</p>
             </div>
 
             <div class="content">
-                <!-- JSONEditor 패널 -->
                 <div class="panel" style="grid-column: 1 / -1">
                     <div class="panel-title">📝 JSONEditor (편집 가능)</div>
                     <div class="panel-content">
@@ -74,7 +75,7 @@
                     💡 팁: 드롭다운에서 데이터를 선택하면 에디터에 로드됩니다. Tree, Form, Code 모드로 자유롭게 편집하세요!
                 </p>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -138,20 +139,20 @@ const testDataMap = {
     pageOption: () => fetch('/data/dkant.pageOption.json').then((r) => r.json()),
 };
 
-// JSONEditor 초기화
-onMounted(() => {
-    const container = editorContainer.value;
-    const options = {
-        mode: 'tree',
-        modes: ['tree', 'form', 'code'],
-        onError: (err) => console.error('JSONEditor 에러:', err),
-        onTextSelectionChange: () => checkChanges(),
-        onChange: () => checkChanges(),
-    };
+// JSONEditor 초기화 (임시 비활성화)
+// onMounted(() => {
+//     const container = editorContainer.value;
+//     const options = {
+//         mode: 'tree',
+//         modes: ['tree', 'form', 'code'],
+//         onError: (err) => console.error('JSONEditor 에러:', err),
+//         onTextSelectionChange: () => checkChanges(),
+//         onChange: () => checkChanges(),
+//     };
 
-    editor = new JSONEditor(container, options, sampleData);
-    originalData.value = JSON.parse(JSON.stringify(sampleData));
-});
+//     editor = new JSONEditor(container, options, sampleData);
+//     originalData.value = JSON.parse(JSON.stringify(sampleData));
+// });
 
 // 변경 사항 확인
 const checkChanges = () => {
