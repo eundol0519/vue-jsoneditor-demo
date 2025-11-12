@@ -15,27 +15,14 @@
           </button>
         </div>
         <div class="feature-cards">
-          <div
+          <FeatureCard
             v-for="(feature, index) in pageOptions"
             :key="feature._id?.$oid || index"
-            class="feature-card"
-            :class="{ active: selectedFeatureIndex === index }"
-            @click="selectFeature(index)"
-          >
-            <div class="feature-card-header">
-              <strong>{{ feature.featureId }}</strong>
-              <button 
-                class="btn-icon btn-delete" 
-                @click.stop.prevent="deleteFeature(index, $event)" 
-                title="삭제"
-              >
-                🗑️
-              </button>
-            </div>
-            <div class="feature-card-info">
-              옵션: {{ Object.keys(feature.option || {}).length }}개
-            </div>
-          </div>
+            :feature="feature"
+            :is-selected="selectedFeatureIndex === index"
+            @select="selectFeature(index)"
+            @delete="deleteFeature(index, $event)"
+          />
           <div v-if="pageOptions.length === 0" class="empty-state">
             Feature가 없습니다. 추가해주세요.
           </div>
@@ -55,31 +42,15 @@
           </button>
         </div>
         <div v-if="selectedFeature" class="option-items">
-          <div
+          <OptionCard
             v-for="(option, key) in selectedFeature.option"
             :key="key"
-            class="option-item"
-            :class="{ active: selectedOptionKey === key }"
-            @click="selectOption(key)"
-          >
-            <div class="option-item-header">
-              <span class="option-key">{{ key }}</span>
-              <button 
-                class="btn-icon btn-delete" 
-                @click.stop.prevent="deleteOption(key, $event)" 
-                title="삭제"
-              >
-                🗑️
-              </button>
-            </div>
-            <div class="option-item-desc">{{ option.desc }}</div>
-            <div class="option-item-value">
-              현재값: <code>{{ option.value }}</code>
-            </div>
-            <div class="option-item-list">
-              리스트: {{ (option.list || []).length }}개 항목
-            </div>
-          </div>
+            :option-key="key"
+            :option="option"
+            :is-selected="selectedOptionKey === key"
+            @select="selectOption(key)"
+            @delete="deleteOption(key, $event)"
+          />
           <div v-if="!selectedFeature.option || Object.keys(selectedFeature.option).length === 0" class="empty-state">
             Option이 없습니다. 추가해주세요.
           </div>
@@ -90,75 +61,15 @@
       </div>
 
       <!-- 3. Option 상세 편집 영역 -->
-      <div class="option-detail-panel">
-        <div class="panel-header">
-          <h2>Option 상세 편집</h2>
-        </div>
-        <div v-if="selectedFeature && selectedOptionKey && selectedFeature.option && selectedFeature.option[selectedOptionKey]" class="detail-form">
-          <div class="form-group">
-            <label>Option Key</label>
-            <input 
-              type="text" 
-              v-model="editingOptionKey" 
-              class="form-input"
-              @change="updateOptionKey"
-            />
-          </div>
-
-          <div class="form-group">
-            <label>설명 (desc)</label>
-            <textarea 
-              :value="selectedFeature.option[selectedOptionKey].desc"
-              @input="selectedFeature.option[selectedOptionKey].desc = $event.target.value"
-              class="form-textarea"
-              rows="3"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>현재 값 (value)</label>
-            <input 
-              type="text" 
-              :value="selectedFeature.option[selectedOptionKey].value"
-              @input="selectedFeature.option[selectedOptionKey].value = $event.target.value"
-              class="form-input"
-            />
-          </div>
-
-          <div class="form-group">
-            <div class="form-group-header">
-              <label>리스트 항목 (템플릿 관리에서만 수정 가능)</label>
-            </div>
-            <div class="list-items readonly-list">
-              <div 
-                v-for="(item, index) in selectedFeature.option[selectedOptionKey].list" 
-                :key="index"
-                class="list-item readonly"
-              >
-                <div class="list-item-fields-readonly">
-                  <div class="list-field-readonly">
-                    <label>listValue</label>
-                    <div class="readonly-value">{{ item.listValue }}</div>
-                  </div>
-                  <div class="list-field-readonly">
-                    <label>listDesc</label>
-                    <div class="readonly-value">{{ item.listDesc }}</div>
-                  </div>
-                </div>
-              </div>
-              <div v-if="!selectedFeature.option[selectedOptionKey].list || selectedFeature.option[selectedOptionKey].list.length === 0" class="empty-state-small">
-                리스트 항목이 없습니다.
-              </div>
-            </div>
-            <div class="info-message">
-              💡 리스트 항목을 수정하려면 <strong>"📚 템플릿 관리"</strong>에서 템플릿을 수정하거나 새로운 템플릿을 만드세요.
-            </div>
-          </div>
-        </div>
-        <div v-else class="empty-state">
-          Option을 선택해주세요.
-        </div>
-      </div>
+      <OptionDetail
+        v-model:editingKey="editingOptionKey"
+        v-model:editingData="editingOptionData"
+        :has-changes="hasOptionChanges"
+        @data-change="hasOptionChanges = true"
+        @key-change="updateOptionKey"
+        @save="saveOptionChanges"
+        @reset="resetOptionChanges"
+      />
     </div>
 
     <div class="action-bar">
@@ -210,7 +121,13 @@
                 </div>
               </div>
               <div v-if="filteredTemplates.length === 0" class="empty-state-small">
-                검색 결과가 없습니다.
+                <template v-if="templateSearch">
+                  검색 결과가 없습니다.
+                </template>
+                <template v-else>
+                  추가 가능한 템플릿이 없습니다.<br/>
+                  <small>현재 Feature에 모든 옵션이 추가되었거나, 새 템플릿을 만들어야 합니다.</small>
+                </template>
               </div>
             </div>
           </div>
@@ -336,7 +253,7 @@
             </div>
             <div class="form-group">
               <div class="form-group-header">
-                <label>리스트 항목</label>
+                <label>리스트 항목 * (최소 1개 필수)</label>
                 <button class="btn btn-add-small" @click="addNewTemplateListItem">
                   ➕ 항목 추가
                 </button>
@@ -354,6 +271,7 @@
                         type="text" 
                         v-model="item.listValue" 
                         class="form-input-small"
+                        placeholder="값을 입력하세요"
                       />
                     </div>
                     <div class="list-field">
@@ -362,17 +280,42 @@
                         type="text" 
                         v-model="item.listDesc" 
                         class="form-input-small"
+                        placeholder="설명을 입력하세요"
                       />
                     </div>
                     <button 
                       class="btn-icon btn-delete" 
                       @click="deleteNewTemplateListItem(index)"
                       title="삭제"
+                      :disabled="newTemplate.list.length <= 1"
                     >
                       🗑️
                     </button>
                   </div>
                 </div>
+              </div>
+              <div v-if="newTemplate.list.length === 0" class="empty-state-small">
+                최소 1개의 리스트 항목이 필요합니다.
+              </div>
+            </div>
+            <div class="form-group">
+              <label>기본값 (value) *</label>
+              <select 
+                v-model="newTemplate.value" 
+                class="form-input"
+                :disabled="newTemplate.list.length === 0"
+              >
+                <option value="">리스트 항목 중 선택하세요</option>
+                <option 
+                  v-for="(item, index) in newTemplate.list" 
+                  :key="index"
+                  :value="item.listValue"
+                >
+                  {{ item.listValue }} - {{ item.listDesc }}
+                </option>
+              </select>
+              <div class="input-hint" v-if="newTemplate.list.length === 0">
+                먼저 리스트 항목을 추가하세요.
               </div>
             </div>
             <div class="modal-actions">
@@ -393,12 +336,17 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import FeatureCard from './components/FeatureCard.vue';
+import OptionCard from './components/OptionCard.vue';
+import OptionDetail from './components/OptionDetail.vue';
 
 const pageOptions = ref([]);
 const originalData = ref(null);
 const selectedFeatureIndex = ref(null);
 const selectedOptionKey = ref(null);
 const editingOptionKey = ref('');
+const editingOptionData = ref(null); // 편집 중인 Option 데이터
+const hasOptionChanges = ref(false); // Option 변경 여부
 
 // 템플릿 관련 상태
 const showTemplateModal = ref(false);
@@ -411,7 +359,8 @@ const expandedTemplates = ref([]); // 확장된 템플릿 추적 (배열로 변�
 const newTemplate = ref({
   key: '',
   desc: '',
-  list: []
+  list: [],
+  value: ''
 });
 
 // 커스텀 템플릿 저장소 (localStorage 사용)
@@ -472,13 +421,30 @@ const optionTemplates = computed(() => {
 
 // 필터링된 템플릿 (검색용)
 const filteredTemplates = computed(() => {
-  if (!templateSearch.value) return optionTemplates.value;
-  
-  const search = templateSearch.value.toLowerCase();
-  return optionTemplates.value.filter(template => 
-    template.key.toLowerCase().includes(search) ||
-    template.desc.toLowerCase().includes(search)
+  // 현재 선택된 Feature에서 이미 사용 중인 옵션 키 목록
+  const existingKeys = new Set();
+  if (selectedFeatureIndex.value !== null) {
+    const feature = pageOptions.value[selectedFeatureIndex.value];
+    if (feature && feature.option) {
+      Object.keys(feature.option).forEach(key => existingKeys.add(key));
+    }
+  }
+
+  // 사용하지 않은 템플릿만 필터링
+  let availableTemplates = optionTemplates.value.filter(template => 
+    !existingKeys.has(template.key)
   );
+
+  // 검색어로 추가 필터링
+  if (templateSearch.value) {
+    const search = templateSearch.value.toLowerCase();
+    availableTemplates = availableTemplates.filter(template => 
+      template.key.toLowerCase().includes(search) ||
+      template.desc.toLowerCase().includes(search)
+    );
+  }
+
+  return availableTemplates;
 });
 
 // 템플릿 관리자용 필터링
@@ -533,15 +499,104 @@ const saveCustomTemplates = () => {
 
 // Feature 선택
 const selectFeature = (index) => {
-  selectedFeatureIndex.value = index;
-  selectedOptionKey.value = null;
-  editingOptionKey.value = '';
+  // 변경사항이 있으면 경고
+  if (hasOptionChanges.value) {
+    ElMessageBox.confirm(
+      '저장하지 않은 변경사항이 있습니다.\n변경사항을 버리고 다른 Feature를 선택하시겠습니까?',
+      '변경사항 확인',
+      {
+        confirmButtonText: '예',
+        cancelButtonText: '아니오',
+        type: 'warning',
+      }
+    ).then(() => {
+      selectedFeatureIndex.value = index;
+      selectedOptionKey.value = null;
+      editingOptionKey.value = '';
+      editingOptionData.value = null;
+      hasOptionChanges.value = false;
+    }).catch(() => {
+      // 취소, 아무것도 안함
+    });
+  } else {
+    selectedFeatureIndex.value = index;
+    selectedOptionKey.value = null;
+    editingOptionKey.value = '';
+    editingOptionData.value = null;
+    hasOptionChanges.value = false;
+  }
 };
 
 // Option 선택
 const selectOption = (key) => {
+  // 변경사항이 있으면 경고
+  if (hasOptionChanges.value) {
+    ElMessageBox.confirm(
+      '저장하지 않은 변경사항이 있습니다.\n변경사항을 버리고 다른 Option을 선택하시겠습니까?',
+      '변경사항 확인',
+      {
+        confirmButtonText: '예',
+        cancelButtonText: '아니오',
+        type: 'warning',
+      }
+    ).then(() => {
+      loadOptionData(key);
+    }).catch(() => {
+      // 취소, 아무것도 안함
+    });
+  } else {
+    loadOptionData(key);
+  }
+};
+
+// Option 데이터 로드
+const loadOptionData = (key) => {
   selectedOptionKey.value = key;
   editingOptionKey.value = key;
+  
+  const feature = pageOptions.value[selectedFeatureIndex.value];
+  if (feature && feature.option && feature.option[key]) {
+    // 깊은 복사로 편집용 데이터 생성
+    editingOptionData.value = JSON.parse(JSON.stringify(feature.option[key]));
+    hasOptionChanges.value = false;
+  }
+};
+
+// Option 변경사항 저장
+const saveOptionChanges = () => {
+  if (!editingOptionData.value || selectedFeatureIndex.value === null || !selectedOptionKey.value) {
+    ElMessage.error('저장할 데이터가 없습니다.');
+    return;
+  }
+
+  try {
+    const feature = pageOptions.value[selectedFeatureIndex.value];
+    if (feature && feature.option) {
+      // 실제 데이터에 반영
+      feature.option[selectedOptionKey.value] = JSON.parse(JSON.stringify(editingOptionData.value));
+      hasOptionChanges.value = false;
+      ElMessage.success('Option이 저장되었습니다.');
+    }
+  } catch (error) {
+    console.error('Option 저장 실패:', error);
+    ElMessage.error('Option 저장 중 오류가 발생했습니다.');
+  }
+};
+
+// Option 변경사항 초기화
+const resetOptionChanges = () => {
+  if (selectedFeatureIndex.value === null || !selectedOptionKey.value) {
+    return;
+  }
+
+  const feature = pageOptions.value[selectedFeatureIndex.value];
+  if (feature && feature.option && feature.option[selectedOptionKey.value]) {
+    // 원본 데이터로 다시 복사
+    editingOptionData.value = JSON.parse(JSON.stringify(feature.option[selectedOptionKey.value]));
+    editingOptionKey.value = selectedOptionKey.value;
+    hasOptionChanges.value = false;
+    ElMessage.info('변경사항이 초기화되었습니다.');
+  }
 };
 
 // Feature 추가
@@ -759,7 +814,8 @@ const closeCreateTemplateModal = () => {
   newTemplate.value = {
     key: '',
     desc: '',
-    list: []
+    list: [],
+    value: ''
   };
 };
 
@@ -782,15 +838,38 @@ const editTemplate = (template) => {
   newTemplate.value = {
     key: template.key,
     desc: template.desc,
-    list: JSON.parse(JSON.stringify(template.sampleList || template.list || []))
+    list: JSON.parse(JSON.stringify(template.sampleList || template.list || [])),
+    value: template.defaultValue || ''
   };
   showCreateTemplateModal.value = true;
 };
 
 // 템플릿 수정
 const updateTemplate = () => {
+  // 1. 설명 검증
   if (!newTemplate.value.desc || !newTemplate.value.desc.trim()) {
     ElMessage.error('템플릿 설명을 입력해주세요.');
+    return;
+  }
+
+  // 2. 리스트 항목 검증
+  if (!newTemplate.value.list || newTemplate.value.list.length === 0) {
+    ElMessage.error('리스트 항목을 최소 1개 이상 추가해주세요.');
+    return;
+  }
+
+  // 3. 리스트 항목 내용 검증
+  const hasEmptyListItem = newTemplate.value.list.some(
+    item => !item.listValue || !item.listValue.trim() || !item.listDesc || !item.listDesc.trim()
+  );
+  if (hasEmptyListItem) {
+    ElMessage.error('모든 리스트 항목의 값과 설명을 입력해주세요.');
+    return;
+  }
+
+  // 4. 기본값 검증
+  if (!newTemplate.value.value || !newTemplate.value.value.trim()) {
+    ElMessage.error('기본값을 선택해주세요.');
     return;
   }
 
@@ -803,7 +882,7 @@ const updateTemplate = () => {
       key: templateKey,
       desc: newTemplate.value.desc.trim(),
       list: JSON.parse(JSON.stringify(newTemplate.value.list)),
-      defaultValue: (newTemplate.value.list.length > 0) ? newTemplate.value.list[0].listValue : '',
+      defaultValue: newTemplate.value.value.trim(),
       listCount: newTemplate.value.list.length,
       sampleList: JSON.parse(JSON.stringify(newTemplate.value.list))
     };
@@ -874,6 +953,7 @@ const deleteTemplate = async (template) => {
 
 // 템플릿 생성
 const createTemplate = () => {
+  // 1. 템플릿 Key 검증
   if (!newTemplate.value.key || !newTemplate.value.key.trim()) {
     ElMessage.error('템플릿 Key를 입력해주세요.');
     return;
@@ -884,12 +964,34 @@ const createTemplate = () => {
     return;
   }
 
+  // 2. 설명 검증
   if (!newTemplate.value.desc || !newTemplate.value.desc.trim()) {
     ElMessage.error('템플릿 설명을 입력해주세요.');
     return;
   }
 
-  // 중복 체크
+  // 3. 리스트 항목 검증
+  if (!newTemplate.value.list || newTemplate.value.list.length === 0) {
+    ElMessage.error('리스트 항목을 최소 1개 이상 추가해주세요.');
+    return;
+  }
+
+  // 4. 리스트 항목 내용 검증
+  const hasEmptyListItem = newTemplate.value.list.some(
+    item => !item.listValue || !item.listValue.trim() || !item.listDesc || !item.listDesc.trim()
+  );
+  if (hasEmptyListItem) {
+    ElMessage.error('모든 리스트 항목의 값과 설명을 입력해주세요.');
+    return;
+  }
+
+  // 5. 기본값 검증
+  if (!newTemplate.value.value || !newTemplate.value.value.trim()) {
+    ElMessage.error('기본값을 선택해주세요.');
+    return;
+  }
+
+  // 6. 중복 체크
   const exists = customTemplates.value.some(t => t.key === newTemplate.value.key);
   if (exists) {
     ElMessage.error('이미 존재하는 템플릿 Key입니다.');
@@ -900,7 +1002,7 @@ const createTemplate = () => {
     key: newTemplate.value.key.trim(),
     desc: newTemplate.value.desc.trim(),
     list: JSON.parse(JSON.stringify(newTemplate.value.list)),
-    defaultValue: (newTemplate.value.list.length > 0) ? newTemplate.value.list[0].listValue : '',
+    defaultValue: newTemplate.value.value.trim(),
     listCount: newTemplate.value.list.length,
     sampleList: JSON.parse(JSON.stringify(newTemplate.value.list))
   };
@@ -1148,118 +1250,16 @@ const generateObjectId = () => {
   flex: 1;
 }
 
-.feature-card {
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+/* Feature 및 Option 카드 스타일은 FeatureCard.vue, OptionCard.vue로 이동 */
 
-.feature-card:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-}
-
-.feature-card.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.feature-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.feature-card-header strong {
-  font-size: 16px;
-}
-
-.feature-card-info {
-  font-size: 13px;
-  opacity: 0.8;
-}
-
-/* Option 아이템 */
+/* Option 아이템 wrapper */
 .option-items {
   padding: 15px;
   overflow-y: auto;
   flex: 1;
 }
 
-.option-item {
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.option-item:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-}
-
-.option-item.active {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  border-color: #f5576c;
-  color: white;
-  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
-}
-
-.option-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.option-key {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.option-item-desc {
-  font-size: 13px;
-  margin-bottom: 6px;
-  opacity: 0.9;
-}
-
-.option-item-value {
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-
-.option-item-value code {
-  background: rgba(0,0,0,0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: monospace;
-}
-
-.option-item.active .option-item-value code {
-  background: rgba(255,255,255,0.2);
-}
-
-.option-item-list {
-  font-size: 12px;
-  opacity: 0.8;
-}
-
-/* 상세 편집 폼 */
-.detail-form {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
+/* 상세 편집 폼 스타일은 OptionDetail.vue로 이동 */
 
 .form-group {
   margin-bottom: 20px;
@@ -1483,7 +1483,7 @@ const generateObjectId = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 2000;
   backdrop-filter: blur(4px);
 }
 
@@ -1949,6 +1949,73 @@ const generateObjectId = () => {
 }
 
 /* 액션 바 */
+.info-message {
+  background-color: #e8f4fd;
+  border-left: 4px solid #409eff;
+  padding: 12px 16px;
+  margin-top: 12px;
+  border-radius: 4px;
+  color: #606266;
+  font-size: 14px;
+}
+
+.info-message strong {
+  color: #409eff;
+  font-weight: 600;
+}
+
+/* Option 편집 액션 버튼 */
+.option-edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 2px solid #e4e7ed;
+}
+
+.btn-option-save,
+.btn-option-reset {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-option-save {
+  background: linear-gradient(135deg, #67c23a 0%, #85ce61 100%);
+  color: white;
+}
+
+.btn-option-save:hover:not(:disabled) {
+  background: linear-gradient(135deg, #85ce61 0%, #67c23a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(103, 194, 58, 0.4);
+}
+
+.btn-option-reset {
+  background: linear-gradient(135deg, #909399 0%, #b3b8bd 100%);
+  color: white;
+}
+
+.btn-option-reset:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b3b8bd 0%, #909399 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(144, 147, 153, 0.4);
+}
+
+.btn-option-save:disabled,
+.btn-option-reset:disabled {
+  background: #f5f7fa;
+  color: #c0c4cc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .action-bar {
   display: flex;
   gap: 15px;
