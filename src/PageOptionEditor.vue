@@ -88,6 +88,9 @@
       <button class="btn btn-deployment" @click="showDeploymentPanel = true">
         🚀 배포 관리
       </button>
+      <button class="btn btn-deployment2" @click="showDeploymentPanel2 = true">
+        🔀 버전 관리 2
+      </button>
     </div>
 
     <!-- 배포 패널 모달 -->
@@ -100,6 +103,24 @@
           </div>
           <div class="modal-body" style="padding: 0; max-height: 85vh; overflow-y: auto;">
             <DeploymentPanel
+              :current-data="pageOptions"
+              @apply="applyDeployment"
+            />
+          </div>
+        </div>
+      </div>
+    </teleport>
+
+    <!-- 배포 패널 2 모달 (Git-Style) -->
+    <teleport to="body">
+      <div v-if="showDeploymentPanel2" class="modal-overlay" @click="showDeploymentPanel2 = false">
+        <div class="modal-content modal-deployment" @click.stop>
+          <div class="modal-header">
+            <h2>🔀 버전 관리 (Git 스타일)</h2>
+            <button class="btn-close" @click="showDeploymentPanel2 = false">✕</button>
+          </div>
+          <div class="modal-body" style="padding: 0; max-height: 85vh; overflow-y: auto;">
+            <DeploymentPanel2
               :current-data="pageOptions"
               @apply="applyDeployment"
             />
@@ -361,6 +382,7 @@ import FeatureCard from './components/FeatureCard.vue';
 import OptionCard from './components/OptionCard.vue';
 import OptionDetail from './components/OptionDetail.vue';
 import DeploymentPanel from './components/DeploymentPanel.vue';
+import DeploymentPanel2 from './components/DeploymentPanel2.vue';
 
 const pageOptions = ref([]);
 const originalData = ref(null);
@@ -375,6 +397,7 @@ const showTemplateModal = ref(false);
 const showTemplateManagerModal = ref(false);
 const showCreateTemplateModal = ref(false);
 const showDeploymentPanel = ref(false);
+const showDeploymentPanel2 = ref(false);
 const templateSearch = ref('');
 const templateManagerSearch = ref('');
 const editingTemplate = ref(null);
