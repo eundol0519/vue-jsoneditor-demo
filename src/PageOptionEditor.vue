@@ -85,7 +85,28 @@
       <button class="btn btn-template" @click="showTemplateManager">
         📚 템플릿 관리
       </button>
+      <button class="btn btn-deployment" @click="showDeploymentPanel = true">
+        🚀 배포 관리
+      </button>
     </div>
+
+    <!-- 배포 패널 모달 -->
+    <teleport to="body">
+      <div v-if="showDeploymentPanel" class="modal-overlay" @click="showDeploymentPanel = false">
+        <div class="modal-content modal-deployment" @click.stop>
+          <div class="modal-header">
+            <h2>🚀 배포 관리</h2>
+            <button class="btn-close" @click="showDeploymentPanel = false">✕</button>
+          </div>
+          <div class="modal-body" style="padding: 0; max-height: 85vh; overflow-y: auto;">
+            <DeploymentPanel
+              :current-data="pageOptions"
+              @apply="applyDeployment"
+            />
+          </div>
+        </div>
+      </div>
+    </teleport>
 
     <!-- 템플릿 선택 모달 -->
     <teleport to="body">
@@ -339,6 +360,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import FeatureCard from './components/FeatureCard.vue';
 import OptionCard from './components/OptionCard.vue';
 import OptionDetail from './components/OptionDetail.vue';
+import DeploymentPanel from './components/DeploymentPanel.vue';
 
 const pageOptions = ref([]);
 const originalData = ref(null);
@@ -352,6 +374,7 @@ const hasOptionChanges = ref(false); // Option 변경 여부
 const showTemplateModal = ref(false);
 const showTemplateManagerModal = ref(false);
 const showCreateTemplateModal = ref(false);
+const showDeploymentPanel = ref(false);
 const templateSearch = ref('');
 const templateManagerSearch = ref('');
 const editingTemplate = ref(null);
@@ -1170,6 +1193,13 @@ const exportJSON = () => {
   ElMessage.success('JSON 파일이 다운로드되었습니다.');
 };
 
+// 배포 적용
+const applyDeployment = (newData) => {
+  pageOptions.value = newData;
+  showDeploymentPanel.value = false;
+  ElMessage.success('배포가 완료되었습니다!');
+};
+
 // ObjectId 생성 헬퍼
 const generateObjectId = () => {
   const timestamp = Math.floor(Date.now() / 1000).toString(16);
@@ -1502,6 +1532,23 @@ const generateObjectId = () => {
 .modal-large {
   max-width: 1200px;
   max-height: 85vh;
+}
+
+.modal-deployment {
+  max-width: 95vw;
+  width: 1400px;
+  max-height: 90vh;
+}
+
+.btn-deployment {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-deployment:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 @keyframes modalSlideIn {
