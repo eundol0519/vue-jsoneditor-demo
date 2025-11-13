@@ -173,6 +173,7 @@
                 <div 
                   class="conflict-option manual"
                   :class="{ selected: change.resolution === 'manual' }"
+                  @click="selectManualEdit(change)"
                 >
                   <input 
                     type="radio" 
@@ -443,7 +444,10 @@ const analyzeChanges = () => {
   });
 
   analysisResult.value = changes;
-  ElMessage.success(`분석 완료: ${changes.length}건의 변경사항 발견`);
+  
+  // CUSTOM 타입 제외한 실제 표시될 변경사항 개수
+  const visibleChanges = changes.filter(c => c.type !== 'CUSTOM');
+  ElMessage.success(`분석 완료: ${visibleChanges.length}건의 변경사항 발견`);
 };
 
 // Diff 계산
@@ -640,6 +644,14 @@ const getTypeLabel = (type) => {
     'CUSTOM': '여기에만 있음'
   };
   return labels[type] || type;
+};
+
+// 직접 편집 선택 시 현재 버전을 기본값으로 설정
+const selectManualEdit = (change) => {
+  change.resolution = 'manual';
+  if (!change.manualEdit) {
+    change.manualEdit = formatJSON(change.current);
+  }
 };
 
 const formatJSON = (obj) => {
