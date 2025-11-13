@@ -58,18 +58,6 @@
         </div>
       </div>
 
-      <!-- 필터 -->
-      <div class="filters">
-        <label>
-          <input type="checkbox" v-model="filters.safe" />
-          안전 적용 가능 ({{ safeChanges.length }})
-        </label>
-        <label>
-          <input type="checkbox" v-model="filters.conflicts" />
-          충돌 ({{ conflictChanges.length }})
-        </label>
-      </div>
-
       <!-- 변경사항 목록 -->
       <div class="changes-list">
         <div 
@@ -477,19 +465,13 @@ const calculateDiff = (oldObj, newObj) => {
   return diff;
 };
 
-// 필터링된 변경사항
+// 필터링된 변경사항 (CUSTOM 타입만 제외하고 모두 표시)
 const filteredChanges = computed(() => {
   if (!analysisResult.value) return [];
 
   return analysisResult.value.filter(change => {
-    if (filters.value.safe && (change.type === 'NEW_FEATURE' || change.type === 'NEW_OPTION' || change.type === 'UPDATE')) {
-      return true;
-    }
-    if (filters.value.conflicts && change.type === 'CONFLICT') {
-      return true;
-    }
-    // CUSTOM 타입은 필터링에서 제외 (표시하지 않음)
-    return false;
+    // CUSTOM 타입만 제외하고 나머지는 모두 표시
+    return change.type !== 'CUSTOM';
   });
 });
 
